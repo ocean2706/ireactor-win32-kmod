@@ -20,3 +20,9 @@ Why not wine
 This is not exactly like wine but somehow similar -wine use the real kernel in order to -wine have no support to device translation -wine does not understand some low level function this layer will provide. -wine need some extraconfiguration.
 
 This will provide basicaly a windows system in kernelspace and more.
+
+
+#Documentation and source of inspiration
+
+https://www.winehq.org/
+http://www.longene.org/en/develop.php
