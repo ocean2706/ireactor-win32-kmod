@@ -3,7 +3,7 @@ https://wiki.winehq.org/Wine_Developer%27s_Guide/Kernel_modules
 ##The problem 1 - Memory Management
 This is an extras from documentation 
 
-2 Detailed memory management
+`2 Detailed memory management
 As already explained in a previous chapter (see Memory management for details), Wine creates every 32-bit Windows process in its own 32-bit address space. Wine also tries to map at the relevant addresses what Windows would do. There are however a few nasty bits to look at.
 
 2.1 Implementation
@@ -29,3 +29,4 @@ Each of these changes alter the address space in a way incompatible with Windows
 The solution to these problems is for Wine to reserve particular parts of the address space so that areas that we don't want the system to use will be avoided. We later on (re/de)allocate those areas as needed. One problem is that some of these mappings are put in place automatically by the dynamic linker: for instance any libraries that Wine is linked to (like libc, libwine, libpthread etc) will be mapped into memory before Wine even gets control. In order to solve that, Wine overrides the default ELF initialization sequence at a low level and reserves the needed areas by using direct syscalls into the kernel (i.e. without linking against any other code to do it) before restarting the standard initialization and letting the dynamic linker continue. This is referred to as the preloader and is found in loader/preloader.c.
 
 Once the usual ELF boot sequence has been completed, some native libraries may well have been mapped above the 3gig limit: however, this doesn't matter as 3G is a Windows limit, not a Linux limit. We still have to prevent the system from allocating anything else above there (like the heap or other DLLs) though so Wine performs a binary search over the upper gig of address space in order to iteratively fill in the holes with MAP_NORESERVE mappings so the address space is allocated but the memory to actually back it is not. This code can be found in libs/wine/mmap.c:reserve_area.
+`
